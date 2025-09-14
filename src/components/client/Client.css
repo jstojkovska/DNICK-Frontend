@@ -1,0 +1,193 @@
+.floor {
+    height: clamp(420px, 68vh, 760px);
+    background: #1f3f39;
+    border-radius: 18px;
+    padding: 12px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+}
+
+.room-wrap {
+    transform-origin: center center;
+    transition: transform .18s ease;
+}
+
+.room {
+    position: relative;
+    margin: 0 auto;
+    border-radius: 16px;
+    background-image: radial-gradient(rgba(255, 255, 255, .10) 2px, transparent 2px);
+    background-size: 24px 24px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05);
+}
+
+.layout-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.balcony-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 340px;
+    background: #b57447;
+    opacity: .95;
+}
+
+.glass {
+    position: absolute;
+    left: 14px;
+    right: 360px;
+    height: 12px;
+    background: cornflowerblue;
+    border-radius: 8px;
+}
+
+.glass-top {
+    top: 12px;
+}
+
+.glass-bottom {
+    bottom: 12px;
+}
+
+.rim {
+    position: absolute;
+    inset: 12px 360px 12px 12px;
+    border: cornflowerblue;
+    border-radius: 12px;
+}
+
+
+.client-container {
+    width: clamp(320px, 96vw, 1320px);
+    margin: 0 auto;
+    padding: 0 12px;
+}
+
+.roomClient {
+    margin-left: 100px;
+}
+
+.client-title {
+    margin: 10px 0 10px;
+}
+
+.titleClientFull {
+    margin-left: 530px;
+    margin-bottom: 10px;
+}
+
+.client-toolbar {
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-left: 500px;
+}
+
+.btnClient{
+    background-color: #4f46e5;
+}
+
+.client-layout {
+    display: grid;
+    grid-template-columns: minmax(760px, 1fr) 420px;
+    gap: 16px;
+    justify-content: center;
+    align-items: start;
+}
+
+.client-left .room {
+    display: inline-block;
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.client-left .floor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 100px;
+}
+
+
+.client-left .table-node.square {
+    width: 96px;
+    height: 96px;
+}
+
+.client-left .table-node.rect {
+    width: 144px;
+    height: 88px;
+}
+
+.client-left .table-node.round {
+    width: 126px;
+    height: 126px;
+    border-radius: 50%;
+}
+
+.client-left .label {
+    font-size: .9rem;
+}
+
+.client-left .label .sub {
+    font-size: .75rem;
+}
+
+.client-right {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+}
+
+.client-card {
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    margin-left: 150px;
+}
+
+@media (max-width: 1180px) {
+    .client-layout {
+        grid-template-columns: 1fr;
+        justify-content: center;
+    }
+
+    .client-right {
+        position: static;
+        top: auto;
+    }
+
+    .client-left .room {
+        --floor-zoom: 0.72;
+        zoom: 0.72;
+        transform: scale(var(--floor-zoom));
+    }
+}
+
+@media (max-width: 640px) {
+    .client-left .room {
+        --floor-zoom: 0.66;
+        zoom: 0.66;
+        transform: scale(var(--floor-zoom));
+    }
+}
+
+.client-inline-form {
+    display: flex;
+    gap: 8px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .client-inline-form .form-group input {
+        min-width: 120px;
+    }
+}
