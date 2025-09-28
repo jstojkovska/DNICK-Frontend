@@ -14,9 +14,9 @@ export default function ManagerDashboard({ me, onLogout }) {
 
     return (
         <div className="page">
-            <div className="page-inner">
+            <div className="page-inner" style={{ marginLeft: "110px" }} >
 
-                <div className="page-header">
+                <div className="page-header" >
                     <div className="heading">Manager dashboard</div>
 
                     <div className="right">
@@ -25,7 +25,7 @@ export default function ManagerDashboard({ me, onLogout }) {
                     </div>
                 </div>
 
-                <div className="tabs tabs-narrow">
+                <div className="tabs tabs-narrow" style={{ marginLeft: "400px" }}>
                     <button
                         className={`btn-tab ${tab === 'reservations' ? 'active' : ''}`}
                         onClick={() => setTab('reservations')}

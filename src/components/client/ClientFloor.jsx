@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
+import { api } from "../../api.js";
 import "./Client.css";
 
 export default function ClientFloor({ tables = [], onSelectTable }) {
     const floorRef = useRef(null);
     const [scale, setScale] = useState(1);
-    const [roomSize, setRoomSize] = useState({ w: 1000, h: 543 });
-    const [shift] = useState({ x: 0, y: 0 }); // ако не користиш pan, остави 0
+    const [roomSize, setRoomSize] = useState({ w: 800, h: 450 });
+    const [shift] = useState({ x: 0, y: 0 });
+    const [zones, setZones] = useState([]);
+
+    useEffect(() => {
+        api.get("/zones/").then(({ data }) => setZones(data));
+    }, []);
 
     const shapeOf = (chairs) =>
         Number(chairs) >= 7 ? "round" : Number(chairs) <= 4 ? "square" : "rect";
@@ -41,10 +47,29 @@ export default function ClientFloor({ tables = [], onSelectTable }) {
                     style={{ width: `${roomSize.w}px`, height: `${roomSize.h}px` }}
                 >
                     <div className="layout-decor">
-                        <div className="balcony-zone" />
-                        <div className="glass glass-top" />
-                        <div className="glass glass-bottom" />
-                        <div className="rim" />
+                        {zones.map((zone) => (
+                            <div
+                                key={zone.id}
+                                className="rnd"
+                                style={{
+                                    position: "absolute",
+                                    top: zone.top,
+                                    left: zone.left,
+                                    width: zone.width,
+                                    height: zone.height,
+                                    background:
+                                        zone.type === "glass"
+                                            ? "rgba(59,130,246,0.3)"
+                                            : zone.type === "terrace"
+                                                ? "rgba(180,120,86,0.3)"
+                                                : "rgba(34,197,94,0.3)",
+                                    border: "2px solid #111",
+                                    borderRadius: 6,
+                                    pointerEvents: "none",
+                                    zIndex: 0,
+                                }}
+                            />
+                        ))}
                     </div>
 
                     {tables.map((t) => {

@@ -16,13 +16,16 @@ html, body {
     align-items: flex-start;
     padding: 24px;
     box-sizing: border-box;
+    overflow: auto;
 }
 
 .center-container {
-    width: clamp(320px, 92vw, 1120px);
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 12px;
 }
+
 
 .page {
     min-height: 100dvh;
@@ -124,6 +127,7 @@ html, body {
     letter-spacing: .2px;
     text-align: center;
     margin-left: 300px;
+    margin-top: -10px;
 }
 
 .toolbar {
@@ -140,22 +144,6 @@ html, body {
     width: 500px;
     box-sizing: border-box;
     margin-left: 350px;
-}
-
-.toolbarFloor {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    background: #ffffffcc;
-    backdrop-filter: saturate(180%) blur(6px);
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
-    width: 70%;
-    box-sizing: border-box;
-    margin-left: 310px;
 }
 
 .form-group {
@@ -203,26 +191,24 @@ html, body {
 }
 
 .floor {
-    width: 100%;
-    max-width: 1000px;
+    width: 500px;
+    height: 800px;
     border-radius: 18px;
-    overflow: hidden;
     border: 1px solid #e5e7eb;
     box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
     background: #3f5e4a;
     position: relative;
     padding: 10px;
     box-sizing: border-box;
-    margin-left: 170px;
-    margin-top: 10px;
+    margin-left: 600px;
+
+
 }
 
 .room {
     position: relative;
     width: 100%;
-    height: clamp(420px, 64vh, 760px);
-    margin: 0 auto;
-    overflow: hidden;
+    height: 100%;
     border-radius: 12px;
     box-sizing: border-box;
 }
@@ -239,7 +225,7 @@ html, body {
     top: 0;
     right: 0;
     bottom: 0;
-    width: 28%;
+    width: 400px;
     background: #b47856;
 }
 
@@ -431,5 +417,42 @@ html, body {
     width: 500px;
 }
 
+.rnd {
+    border-radius: 6px;
+    cursor: move;
+}
+
+.rnd .btn-del {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    border: 0;
+    border-radius: 9999px;
+    background: #ef4444;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.toolbarRow {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 10px auto;
+    max-width: 1200px;
+}
 
 
+.toolbarFloor {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}

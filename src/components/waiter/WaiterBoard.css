@@ -3,13 +3,15 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
+
     background: #ffffffcc;
     backdrop-filter: saturate(180%) blur(6px);
     border: 1px solid #e5e7eb;
     border-radius: 14px;
     padding: 12px 16px;
-    margin-left: 400px;
-    margin-top: -200px;
+
+    /* 🚫 Избриши ги старите: margin-left, margin-top */
+    margin-bottom: 20px; /* само долно растојание */
 }
 
 .btnLogout {
@@ -29,10 +31,9 @@
     min-width: 0;
 }
 
-
 @media (max-width: 1099px) {
     .client-layout {
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
     }
 
     .client-right {
@@ -63,6 +64,7 @@
     box-sizing: border-box;
     overflow: hidden;
     margin-left: 200px;
+    text-align: center;
 }
 
 .panel-row {
@@ -96,8 +98,13 @@
 
 .empty {
     color: #6b7280;
-    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 8px auto;      /* центрирај по хоризонтала */
+    display: table;        /* трик за центрирање */
 }
+
+
 
 .input-base {
     height: 34px;
@@ -150,34 +157,27 @@
 }
 
 .floor {
-    height: clamp(420px, 68vh, 760px);
-    background: #1f3f39;
-    border-radius: 18px;
-    padding: 12px;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px;
     overflow: hidden;
-    display: grid;
-    place-items: center;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
-}
-
-.room-wrap {
-    transform-origin: center center;
-    transition: transform .18s ease;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 12px 10px rgba(0, 0, 0, .08);
+    background: #264339;
+    position: relative;
+    padding: 0;
+    margin: 0 auto;
 }
 
 .room {
     position: relative;
+    width: 1000px;
+    height: 543px;
     margin: 0 auto;
-    border-radius: 16px;
-    background-image: radial-gradient(rgba(255, 255, 255, .10) 2px, transparent 2px);
+    border-radius: 12px;
+    box-sizing: border-box;
+    background-image: radial-gradient(rgba(255, 255, 255, .06) 2px, transparent 2px);
     background-size: 24px 24px;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05);
-}
-
-.layout-decor {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
 }
 
 .balcony-zone {
@@ -308,7 +308,7 @@
     display: grid;
     gap: 8px;
     margin-top: 8px;
-    max-height: 250px;
+    max-height: 150px;
     overflow-y: auto;
     padding-right: 6px;
 }
@@ -317,7 +317,26 @@
     display: grid;
     gap: 8px;
     margin-top: 8px;
-    max-height: 200px;
+    max-height: 150px;
     overflow-y: auto;
     padding-right: 6px;
+}
+
+.rnd {
+    border-radius: 6px;
+}
+
+.order-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item .actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }

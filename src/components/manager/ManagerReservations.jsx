@@ -30,7 +30,7 @@ export default function ManagerReservations() {
 
     return (
         <div className="section section-narrow">
-            <div className="toolbar" style={{ justifyContent: 'space-between' }}>
+            <div className="toolbar" style={{ justifyContent: 'space-between', marginLeft:300}}>
                 <div style={{ fontWeight: 800 }}>Pending reservations</div>
                 <button className="btn save" onClick={load}>
                     {loading ? 'Loading…' : 'Refresh'}

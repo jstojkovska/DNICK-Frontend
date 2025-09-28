@@ -4,6 +4,7 @@ import "./WaiterBoard.css";
 
 export default function WaiterBoard() {
     const [tables, setTables] = useState([]);
+    const [zones, setZones] = useState([]);
     const [menu, setMenu] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -11,12 +12,10 @@ export default function WaiterBoard() {
     const [activeOrder, setActiveOrder] = useState(null);
     const [creating, setCreating] = useState(false);
 
-
-    const [roomSize, setRoomSize] = useState({ w: 1000, h: 543 });
-    const [scale, setScale] = useState(1);
+    const [roomSize, setRoomSize] = useState({ w: 850, h: 600 });
+    const [scale, setScale] = useState(0.72);
     const [shift, setShift] = useState({ x: 0, y: 0 });
     const floorRef = useRef(null);
-
 
     const [query, setQuery] = useState("");
     const norm = (s) => (s ?? "").toString().trim().toLowerCase();
@@ -25,33 +24,20 @@ export default function WaiterBoard() {
     const shapeOf = (chairs) =>
         Number(chairs) >= 7 ? "round" : Number(chairs) <= 4 ? "square" : "rect";
 
-
-    const fitScale = () => {
-        const el = floorRef.current;
-        if (!el) return;
-        const availW = el.clientWidth - 24;
-        const availH = el.clientHeight - 24;
-        const s = Math.min(availW / roomSize.w, availH / roomSize.h, 1);
-        setScale(Math.max(0.72, Math.min(1, s)));
-    };
-
     useEffect(() => {
-        const onResize = () => fitScale();
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
+        load();
+        const id = setInterval(load, 10000);
+        return () => clearInterval(id);
     }, []);
-    useEffect(() => {
-        fitScale();
-    }, [roomSize]);
 
     const load = async () => {
         setLoading(true);
         try {
-            const [{ data: t }, { data: m }] = await Promise.all([
+            const [{ data: t }, { data: m }, { data: z }] = await Promise.all([
                 api.get("/tables/status/"),
                 api.get("/menu-items/"),
+                api.get("/zones/"),
             ]);
-
 
             const map = new Map();
             t.forEach((x) => {
@@ -61,18 +47,13 @@ export default function WaiterBoard() {
 
             setTables(ts);
             setMenu(m);
-            setRoomSize({ w: 1000, h: 543 });
+            setZones(z);
+            setRoomSize({ w: 750, h: 450 });
             setShift({ x: 0, y: 0 });
         } finally {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        load();
-        const id = setInterval(load, 10000);
-        return () => clearInterval(id);
-    }, []);
 
     const openTable = async (t) => {
         setSelectedTable(t);
@@ -144,7 +125,6 @@ export default function WaiterBoard() {
         load();
     };
 
-    // само по code
     const filteredMenu = useMemo(() => {
         if (!query.trim()) return menu;
         return menu.filter((m) => itemMatches(m, query));
@@ -178,17 +158,36 @@ export default function WaiterBoard() {
     return (
         <div className="client-layout">
             <div className="client-left">
-                <div className="floor" ref={floorRef}>
+                <div className="floor" ref={floorRef} style={{ width: "650px", height: "380px" }}>
                     <div className="room-wrap" style={{ transform: `scale(${scale})` }}>
                         <div
                             className="room"
                             style={{ width: `${roomSize.w}px`, height: `${roomSize.h}px` }}
                         >
                             <div className="layout-decor">
-                                <div className="balcony-zone" />
-                                <div className="glass glass-top" />
-                                <div className="glass glass-bottom" />
-                                <div className="rim" />
+                                {zones.map((zone) => (
+                                    <div
+                                        key={zone.id}
+                                        className="rnd"
+                                        style={{
+                                            position: "absolute",
+                                            top: zone.top,
+                                            left: zone.left,
+                                            width: zone.width,
+                                            height: zone.height,
+                                            background:
+                                                zone.type === "glass"
+                                                    ? "rgba(59,130,246,0.3)"
+                                                    : zone.type === "terrace"
+                                                        ? "rgba(180,120,86,0.3)"
+                                                        : "rgba(34,197,94,0.3)",
+                                            border: "2px solid #111",
+                                            borderRadius: 6,
+                                            pointerEvents: "none",
+                                            zIndex: 0,
+                                        }}
+                                    />
+                                ))}
                             </div>
 
                             {tables.map((t) => {
@@ -224,7 +223,7 @@ export default function WaiterBoard() {
                 {!selectedTable ? (
                     <div className="card row empty">Select a table to manage order</div>
                 ) : (
-                    <div style={{ display: "grid", gap: 12 }}>
+                    <>
                         <div className="card">
                             <div className="panel-row">
                                 <div>
@@ -239,50 +238,57 @@ export default function WaiterBoard() {
                             </div>
                         </div>
 
-                        {creating && (
-                            <div className="card">
-                                <div className="panel-row">
-                                    <div>There is no active order for this table.</div>
-                                    {selectedTable.status === "reserved" ? (
-                                        <div className="row" style={{ gap: 8 }}>
-                      <span className="title-strong" style={{ color: "#ef4444" }}>
-                        Reserved
-                      </span>
-                                            <button className="btn btn-save" onClick={() => seatGuests(selectedTable.id)}>
-                                                Seat guests
+                        <div className="scroll-area">
+                            {creating && (
+                                <div className="card">
+                                    <div className="panel-row">
+                                        <div>There is no active order for this table.</div>
+                                        {selectedTable.status === "reserved" ? (
+                                            <div className="row" style={{ gap: 8 }}>
+                                                <span className="title-strong" style={{ color: "#ef4444" }}>
+                                                    Reserved
+                                                </span>
+                                                <button
+                                                    className="btn btn-save"
+                                                    onClick={() => seatGuests(selectedTable.id)}
+                                                >
+                                                    Seat guests
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button className="btn btn-add" onClick={startOrder}>
+                                                Start order
                                             </button>
-                                        </div>
-                                    ) : (
-                                        <button className="btn btn-add" onClick={startOrder}>
-                                            Start order
-                                        </button>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {activeOrder && (
-                            <>
+                            {activeOrder && (
                                 <div className="card">
                                     <div className="section-title">Active order #{activeOrder.id}</div>
 
                                     {activeOrder.orderitem_set.length === 0 ? (
-                                        <div className="empty">No items. Add from the menu below.</div>
+                                        <div className="empty">No items.</div>
                                     ) : (
                                         <div className="scrolly-250">
                                             {activeOrder.orderitem_set.map((oi) => (
-                                                <div key={oi.id} className="row">
+                                                <div key={oi.id} className="order-item">
                                                     <div>
                                                         <div className="title-strong">
                                                             {oi.menu_item_detail?.name} — {oi.menu_item_detail?.price} ден
                                                         </div>
-                                                        <div className="text-muted">{oi.menu_item_detail?.item_type}</div>
+                                                        <div className="text-muted">
+                                                            {oi.menu_item_detail?.item_type}
+                                                        </div>
                                                     </div>
 
-                                                    <div className="row" style={{ gap: 6 }}>
+                                                    <div className="actions">
                                                         <button
                                                             className="btn btn-primary"
-                                                            onClick={() => setQty(oi.id, Math.max(1, oi.quantity - 1))}
+                                                            onClick={() =>
+                                                                setQty(oi.id, Math.max(1, oi.quantity - 1))
+                                                            }
                                                         >
                                                             −
                                                         </button>
@@ -293,7 +299,10 @@ export default function WaiterBoard() {
                                                         >
                                                             +
                                                         </button>
-                                                        <button className="btn btn-danger" onClick={() => removeItem(oi.id)}>
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={() => removeItem(oi.id)}
+                                                        >
                                                             Remove
                                                         </button>
                                                     </div>
@@ -313,49 +322,49 @@ export default function WaiterBoard() {
                                         </div>
                                     )}
                                 </div>
+                            )}
 
-                                <div className="card">
-                                    <div className="panel-row">
-                                        <div className="title-strong">Menu</div>
+                            <div className="card">
+                                <div className="panel-row">
+                                    <div className="title-strong">Menu</div>
 
-                                        <div className="row" style={{ gap: 6 }}>
-                                            <input
-                                                value={query}
-                                                onChange={(e) => setQuery(e.target.value)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter") tryQuickAddByCode();
-                                                }}
-                                                placeholder="Enter code"
-                                                className="input-base"
-                                            />
-                                            <button className="btn btn-add" onClick={tryQuickAddByCode}>
-                                                Add by code
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="scrolly-200">
-                                        {filteredMenu.map((m) => (
-                                            <div key={m.id} className="row">
-                                                <div>
-                                                    <div className="title-strong">{m.name}</div>
-                                                    <div className="text-muted">
-                                                        code: {m.code} • {m.item_type} • {m.price} denars
-                                                    </div>
-                                                </div>
-                                                <button className="btn btn-add" onClick={() => addItem(m.id, 1)}>
-                                                    Add
-                                                </button>
-                                            </div>
-                                        ))}
-                                        {filteredMenu.length === 0 && (
-                                            <div className="empty">No items match that code.</div>
-                                        )}
+                                    <div className="row" style={{ gap: 6 }}>
+                                        <input
+                                            value={query}
+                                            onChange={(e) => setQuery(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") tryQuickAddByCode();
+                                            }}
+                                            placeholder="Enter code"
+                                            className="input-base"
+                                        />
+                                        <button className="btn btn-add" onClick={tryQuickAddByCode}>
+                                            Add by code
+                                        </button>
                                     </div>
                                 </div>
-                            </>
-                        )}
-                    </div>
+
+                                <div className="scrolly-200">
+                                    {filteredMenu.map((m) => (
+                                        <div key={m.id} className="row">
+                                            <div>
+                                                <div className="title-strong">{m.name}</div>
+                                                <div className="text-muted">
+                                                    code: {m.code} • {m.item_type} • {m.price} denars
+                                                </div>
+                                            </div>
+                                            <button className="btn btn-add" onClick={() => addItem(m.id, 1)}>
+                                                Add
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {filteredMenu.length === 0 && (
+                                        <div className="empty">No items match that code.</div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
