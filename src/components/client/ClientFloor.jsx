@@ -5,7 +5,7 @@ import "./Client.css";
 export default function ClientFloor({ tables = [], onSelectTable }) {
     const floorRef = useRef(null);
     const [scale, setScale] = useState(1);
-    const [roomSize, setRoomSize] = useState({ w: 800, h: 450 });
+    const [roomSize, setRoomSize] = useState({ w: 730, h: 450 });
     const [shift] = useState({ x: 0, y: 0 });
     const [zones, setZones] = useState([]);
 

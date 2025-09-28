@@ -158,7 +158,7 @@ export default function WaiterBoard() {
     return (
         <div className="client-layout">
             <div className="client-left">
-                <div className="floor" ref={floorRef} style={{ width: "650px", height: "380px" }}>
+                <div className="floor" ref={floorRef} style={{ width: "600px", height: "360px" }}>
                     <div className="room-wrap" style={{ transform: `scale(${scale})` }}>
                         <div
                             className="room"

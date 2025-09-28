@@ -27,5 +27,3 @@ export default defineConfig([
     },
   },
 ])
-
-// znaci ova e za kodot da ima cisti pravila takvi stvari, za react hooks

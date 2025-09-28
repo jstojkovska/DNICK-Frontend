@@ -9,6 +9,3 @@ export default defineConfig({
     },
   }
 })
-
-
-// za proxy kon backend , za React i Django rabotat zaedno brz CORS prob.

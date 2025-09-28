@@ -9,5 +9,3 @@ module.exports = {
     },
     plugins: [],
 };
-
-// Tailwind za da ne pisuvam racno CSS

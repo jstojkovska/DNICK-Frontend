@@ -4,7 +4,7 @@ import {Rnd} from 'react-rnd';
 import axios from 'axios';
 import './ManagerTableEditor.css';
 
-const ManagerTableEditor = () => {
+const ManagerTableEditor = ({ onBackToDashboard }) => {
     const [tables, setTables] = useState([]);
     const [zones, setZones] = useState([]);
     const [newTable, setNewTable] = useState({
@@ -24,7 +24,6 @@ const ManagerTableEditor = () => {
             .then((res) => setZones(res.data))
             .catch((err) => console.error('Failed to load zones', err));
     }, []);
-
 
     const handleStop = (e, data, id) => {
         axios.patch(`/api/tables/${id}/`, {top: data.y, left: data.x});
@@ -72,9 +71,27 @@ const ManagerTableEditor = () => {
     return (
         <div className="wrapper">
             <div className="center-container">
-                <h1 className="titleFloor" style={{ marginLeft: "200px" }}>Manager Table & Zones View</h1>
+                <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                    <button
+                        onClick={onBackToDashboard}
+                        style={{
+                            background: '#6366f1',
+                            color: 'white',
+                            border: 'none',
+                            padding: '12px 24px',
+                            borderRadius: '8px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                        }}
+                    >
+                        ← Back to Dashboard
+                    </button>
+                </div>
 
-                <div className="toolbarRow">
+                <h1 className="titleFloor" style={{ textAlign: "center", margin: "0 auto 20px auto" }}>Manager Table & Zones View</h1>
+
+                <div className="toolbarRow" style={{ justifyContent: "center", display: "flex", flexWrap: "wrap", gap: "20px", marginBottom: "30px" }}>
                     <div className="toolbarFloor">
                         <div className="form-group">
                             <label>Table Number</label>
@@ -119,7 +136,7 @@ const ManagerTableEditor = () => {
                     </div>
                 </div>
 
-                <div className="floor" style={{width: '800px'}}>
+                <div className="floor" style={{width: '800px', margin: '0 auto'}}>
                     <div className="room">
 
                         {zones.map((zone) => (
